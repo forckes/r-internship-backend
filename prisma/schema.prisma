@@ -44,8 +44,8 @@ model Task {
   description String
   dueDate     DateTime @map("dueDate")
  
-  priority    TaskPriority @default(MEDIUM)
-  status      TaskStatus @default(TODO)
+  priority    EnumTaskPriority @default(MEDIUM)
+  status      EnumTaskStatus @default(TODO)
 
   taskList    TaskList  @relation(fields: [taskListId], references: [id]) 
   taskListId  Int @map("task_list_id")
@@ -60,7 +60,7 @@ model ActivityLog {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now()) @map("created_at")
 
-  action     TaskAction
+  action     EnumTaskAction
 
   task       Task     @relation(fields: [taskId], references: [id])
   taskId     Int      @map("task_id")
@@ -71,7 +71,7 @@ model ActivityLog {
   userId     Int?     @map("user_id")
 }
 
-enum TaskAction {
+enum EnumTaskAction {
   CREATE
   UPDATE_NAME
   UPDATE_DESCRIPTION
@@ -82,13 +82,13 @@ enum TaskAction {
   DELETE
 }
 
-enum TaskStatus {
+enum EnumTaskStatus {
   TODO
   IN_PROGRESS
   DONE
 }
 
-enum TaskPriority {
+enum EnumTaskPriority {
   LOW
   MEDIUM
   HIGHT
