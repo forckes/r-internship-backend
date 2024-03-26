@@ -4,6 +4,7 @@ import { AppService } from './app.service'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import appRootPath from 'app-root-path'
 import { ConfigModule } from '@nestjs/config'
+import { PrismaService } from './prisma.service'
 
 @Module({
 	imports: [
@@ -14,6 +15,6 @@ import { ConfigModule } from '@nestjs/config'
 		ConfigModule.forRoot()
 	],
 	controllers: [AppController],
-	providers: [AppService]
+	providers: [AppService, PrismaService]
 })
 export class AppModule {}
