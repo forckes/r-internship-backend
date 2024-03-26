@@ -5,6 +5,8 @@ import { ServeStaticModule } from '@nestjs/serve-static'
 import appRootPath from 'app-root-path'
 import { ConfigModule } from '@nestjs/config'
 import { PrismaService } from './prisma.service'
+import { AuthModule } from './auth/auth.module'
+import { UserModule } from './user/user.module'
 
 @Module({
 	imports: [
@@ -12,7 +14,9 @@ import { PrismaService } from './prisma.service'
 			rootPath: `${appRootPath}/uploads`,
 			serveRoot: '/uploads'
 		}),
-		ConfigModule.forRoot()
+		ConfigModule.forRoot(),
+		AuthModule,
+		UserModule
 	],
 	controllers: [AppController],
 	providers: [AppService, PrismaService]
