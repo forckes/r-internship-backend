@@ -8,6 +8,7 @@ import { PrismaService } from './prisma.service'
 import { AuthModule } from './auth/auth.module'
 import { UserModule } from './user/user.module'
 import { TaskListModule } from './task-list/task-list.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
 	imports: [
@@ -18,7 +19,8 @@ import { TaskListModule } from './task-list/task-list.module';
 		ConfigModule.forRoot(),
 		AuthModule,
 		UserModule,
-		TaskListModule
+		TaskListModule,
+		TaskModule
 	],
 	controllers: [AppController],
 	providers: [AppService, PrismaService]
