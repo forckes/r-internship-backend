@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config'
 import { PrismaService } from './prisma.service'
 import { AuthModule } from './auth/auth.module'
 import { UserModule } from './user/user.module'
+import { TaskListModule } from './task-list/task-list.module';
 
 @Module({
 	imports: [
@@ -16,7 +17,8 @@ import { UserModule } from './user/user.module'
 		}),
 		ConfigModule.forRoot(),
 		AuthModule,
-		UserModule
+		UserModule,
+		TaskListModule
 	],
 	controllers: [AppController],
 	providers: [AppService, PrismaService]
