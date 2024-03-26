@@ -18,4 +18,78 @@ model User {
   name String
   email      String @unique
   password   String
+
+  taskLists TaskList[] 
+  tasks Task[]
+  activityLogs ActivityLog[]
+}
+
+model TaskList {
+  id        Int      @id @default(autoincrement())
+  name      String
+  tasks     Task[]
+
+  user       User?       @relation(fields: [userId], references: [id])
+  userId     Int?        @map("user_id")
+
+  @@map("Task_list")
+}
+
+model Task {
+  id          Int       @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("create_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  name        String
+  description String
+  dueDate     DateTime @map("dueDate")
+ 
+  priority    TaskPriority @default(MEDIUM)
+  status      TaskStatus @default(TODO)
+
+  taskList    TaskList  @relation(fields: [taskListId], references: [id]) 
+  taskListId  Int @map("task_list_id")
+
+  user       User?       @relation(fields: [userId], references: [id])
+  userId     Int?        @map("user_id")
+
+  activityLogs ActivityLog[]
+}
+
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  action     TaskAction
+
+  task       Task     @relation(fields: [taskId], references: [id])
+  taskId     Int      @map("task_id")
+
+  data       String?  
+
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     Int?     @map("user_id")
+}
+
+enum TaskAction {
+  CREATE
+  UPDATE_NAME
+  UPDATE_DESCRIPTION
+  UPDATE_DUE_DATE
+  UPDATE_PRIORITY
+  UPDATE_STATUS
+  MOVE
+  DELETE
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGHT
 }
