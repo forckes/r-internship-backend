@@ -13,6 +13,8 @@ import {
 import { TaskService } from './task.service'
 import { TaskUpdateDto } from './dto/task.update.dto'
 import { TaskDto } from './dto/task.dto'
+import { CurrentUser } from 'src/auth/decorators/user.decorator'
+import { Auth } from 'src/auth/decorators/auth.decorator'
 
 @Controller('tasks')
 export class TaskController {
@@ -20,31 +22,43 @@ export class TaskController {
 
 	@UsePipes(new ValidationPipe())
 	@Get()
-	async getAll() {
-		return this.taskService.getAll()
+	@Auth()
+	async getAll(@CurrentUser('id') userId: number) {
+		return this.taskService.getAll(userId)
 	}
 
 	@Get(':id')
-	async getTaskById(@Param('id') id: string) {
-		return this.taskService.getById(+id)
+	@Auth()
+	async getTaskById(
+		@CurrentUser('id') userId: number,
+		@Param('id') id: string
+	) {
+		return this.taskService.getById(userId, +id)
 	}
 
 	@HttpCode(200)
+	@Auth()
 	@Post()
-	async create(@Body() dto: TaskDto) {
-		return this.taskService.create(dto)
+	async create(@CurrentUser('id') userId: number, @Body() dto: TaskDto) {
+		return this.taskService.create(userId, dto)
 	}
 
 	@UsePipes(new ValidationPipe())
 	@HttpCode(200)
 	@Put(':id')
-	async update(@Param('id') taskId: string, @Body() dto: TaskUpdateDto) {
-		return this.taskService.update(+taskId, dto)
+	@Auth()
+	async update(
+		@CurrentUser('id') userId: number,
+		@Param('id') taskId: string,
+		@Body() dto: TaskUpdateDto
+	) {
+		return this.taskService.update(userId, +taskId, dto)
 	}
 
 	@HttpCode(200)
 	@Delete(':id')
-	async delete(@Param('id') taskId: string) {
-		return this.taskService.delete(+taskId)
+	@Auth()
+	async delete(@CurrentUser('id') userId: number, @Param('id') taskId: string) {
+		return this.taskService.delete(userId, +taskId)
 	}
 }
