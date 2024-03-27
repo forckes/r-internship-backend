@@ -2,10 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { returnTaskListObject } from './return-task-list.object'
 import { TaskListDto } from './task-list.dto'
+import { TaskService } from 'src/task/task.service'
 
 @Injectable()
 export class TaskListService {
-	constructor(private prisma: PrismaService) {}
+	constructor(
+		private prisma: PrismaService,
+		private taskService: TaskService
+	) {}
 
 	async getAll() {
 		return this.prisma.taskList.findMany({
