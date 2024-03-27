@@ -21,7 +21,7 @@ export class TaskListService {
 			where: { id: userId }
 		})
 
-		if (user) throw new NotFoundException('User not found')
+		if (!user) throw new NotFoundException('User not found')
 
 		return this.prisma.taskList.findMany({
 			where: { userId },
@@ -37,7 +37,7 @@ export class TaskListService {
 			where: { id: userId }
 		})
 
-		if (user) throw new NotFoundException('User not found')
+		if (!user) throw new NotFoundException('User not found')
 
 		return this.prisma.taskList.findUnique({
 			where: { userId, id: taskListId }
@@ -49,7 +49,7 @@ export class TaskListService {
 			where: { id: userId }
 		})
 
-		if (user) throw new NotFoundException('User not found')
+		if (!user) throw new NotFoundException('User not found')
 
 		const isSameNameList = await this.prisma.taskList.findFirst({
 			where: { userId, name: dto.name }
@@ -83,7 +83,7 @@ export class TaskListService {
 			where: { id: userId }
 		})
 
-		if (user) throw new NotFoundException('User not found')
+		if (!user) throw new NotFoundException('User not found')
 
 		const isSameNameList = await this.prisma.taskList.findFirst({
 			where: { userId, name: dto.name }
@@ -108,7 +108,7 @@ export class TaskListService {
 			where: { id: userId }
 		})
 
-		if (user) throw new NotFoundException('User not found')
+		if (!user) throw new NotFoundException('User not found')
 
 		const taskList = await this.prisma.taskList.findUnique({
 			where: { userId, id: taskListId }
