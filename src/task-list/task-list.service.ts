@@ -63,7 +63,12 @@ export class TaskListService {
 
 		return this.prisma.taskList.create({
 			data: {
-				name: dto.name
+				name: dto.name,
+				user: {
+					connect: {
+						id: userId
+					}
+				}
 			}
 		})
 	}
