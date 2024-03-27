@@ -82,7 +82,7 @@ export class TaskListService {
 			where: { id: taskListId }
 		})
 
-		if (taskList) throw new NotFoundException('Task list not found')
+		if (!taskList) throw new NotFoundException('Task list not found')
 
 		const user = await this.prisma.user.findUnique({
 			where: { id: userId }
@@ -119,7 +119,7 @@ export class TaskListService {
 			where: { userId, id: taskListId }
 		})
 
-		if (taskList) throw new NotFoundException('Task list not found')
+		if (!taskList) throw new NotFoundException('Task list not found')
 
 		return this.prisma.taskList.delete({
 			where: {
@@ -140,7 +140,7 @@ export class TaskListService {
 			where: { id: taskListId }
 		})
 
-		if (taskList) throw new NotFoundException('Task list not found')
+		if (!taskList) throw new NotFoundException('Task list not found')
 
 		return this.prisma.taskList.delete({
 			where: {

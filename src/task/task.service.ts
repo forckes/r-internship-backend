@@ -104,7 +104,7 @@ export class TaskService {
 			where: { userId, id: taskId }
 		})
 
-		if (task) throw new NotFoundException('Task not found')
+		if (!task) throw new NotFoundException('Task not found')
 
 		return this.prisma.task.update({
 			where: { id: taskId },
@@ -134,7 +134,7 @@ export class TaskService {
 			where: { userId, id: taskId }
 		})
 
-		if (task) throw new NotFoundException('Task not found')
+		if (!task) throw new NotFoundException('Task not found')
 
 		return this.prisma.task.delete({
 			where: {
@@ -154,7 +154,7 @@ export class TaskService {
 			where: { id: taskId }
 		})
 
-		if (task) throw new NotFoundException('Task not found')
+		if (!task) throw new NotFoundException('Task not found')
 
 		return this.prisma.task.delete({
 			where: {
