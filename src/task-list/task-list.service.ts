@@ -123,4 +123,24 @@ export class TaskListService {
 			}
 		})
 	}
+
+	async adminDelete(userId: number, taskListId: number): Promise<ITaskList> {
+		const user = await this.prisma.user.findUnique({
+			where: { id: userId }
+		})
+
+		if (!user) throw new NotFoundException('User not found')
+
+		const taskList = await this.prisma.taskList.findUnique({
+			where: { id: taskListId }
+		})
+
+		if (taskList) throw new NotFoundException('Task list not found')
+
+		return this.prisma.taskList.delete({
+			where: {
+				id: taskListId
+			}
+		})
+	}
 }

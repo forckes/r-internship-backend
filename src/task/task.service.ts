@@ -18,7 +18,7 @@ export class TaskService {
 			where: { id: userId }
 		})
 
-		if (user) throw new NotFoundException('User not found')
+		if (!user) throw new NotFoundException('User not found')
 
 		return this.prisma.task.findMany({
 			where: { userId },
@@ -34,7 +34,7 @@ export class TaskService {
 			where: { id: userId }
 		})
 
-		if (user) throw new NotFoundException('User not found')
+		if (!user) throw new NotFoundException('User not found')
 
 		return this.prisma.task.findUnique({
 			where: { userId, id: taskId }
@@ -46,16 +46,14 @@ export class TaskService {
 			where: { id: userId }
 		})
 
-		if (user) throw new NotFoundException('User not found')
+		if (!user) throw new NotFoundException('User not found')
 
-		const isSameNameList = await this.prisma.taskList.findFirst({
+		const isSameName = await this.prisma.task.findFirst({
 			where: { userId, name: dto.name }
 		})
 
-		if (isSameNameList) {
-			throw new BadRequestException(
-				'Task list with the same name already exists'
-			)
+		if (isSameName) {
+			throw new BadRequestException('Task with the same name already exists')
 		}
 
 		const { name, description, dueDate, taskListId, priority, status } = dto
@@ -90,16 +88,14 @@ export class TaskService {
 			where: { id: userId }
 		})
 
-		if (user) throw new NotFoundException('User not found')
+		if (!user) throw new NotFoundException('User not found')
 
-		const isSameNameList = await this.prisma.taskList.findFirst({
+		const isSameName = await this.prisma.task.findFirst({
 			where: { userId, name: dto.name }
 		})
 
-		if (isSameNameList) {
-			throw new BadRequestException(
-				'Task list with the same name already exists'
-			)
+		if (isSameName) {
+			throw new BadRequestException('Task with the same name already exists')
 		}
 
 		const { name, description, dueDate, taskListId, priority, status } = dto
@@ -132,10 +128,30 @@ export class TaskService {
 			where: { id: userId }
 		})
 
-		if (user) throw new NotFoundException('User not found')
+		if (!user) throw new NotFoundException('User not found')
 
 		const task = await this.prisma.task.findUnique({
 			where: { userId, id: taskId }
+		})
+
+		if (task) throw new NotFoundException('Task not found')
+
+		return this.prisma.task.delete({
+			where: {
+				id: taskId
+			}
+		})
+	}
+
+	async adminDelete(userId: number, taskId: number): Promise<ITask> {
+		const user = await this.prisma.user.findUnique({
+			where: { id: userId }
+		})
+
+		if (!user) throw new NotFoundException('User not found')
+
+		const task = await this.prisma.task.findUnique({
+			where: { id: taskId }
 		})
 
 		if (task) throw new NotFoundException('Task not found')
