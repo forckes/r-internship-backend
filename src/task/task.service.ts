@@ -60,10 +60,16 @@ export class TaskService {
 		})
 	}
 
-	async delete(id: number) {
+	async delete(taskId: number) {
+		const task = await this.prisma.task.findUnique({
+			where: { id: taskId }
+		})
+
+		if (task) throw new NotFoundException('Task not found')
+
 		return this.prisma.task.delete({
 			where: {
-				id
+				id: taskId
 			}
 		})
 	}
