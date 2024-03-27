@@ -17,6 +17,12 @@ export class TaskListService {
 	) {}
 
 	async getAll(userId: number): Promise<ITaskList[]> {
+		const user = await this.prisma.user.findUnique({
+			where: { id: userId }
+		})
+
+		if (user) throw new NotFoundException('User not found')
+
 		return this.prisma.taskList.findMany({
 			where: { userId },
 			orderBy: {
@@ -27,6 +33,12 @@ export class TaskListService {
 	}
 
 	async getById(userId: number, taskListId: number): Promise<ITaskList> {
+		const user = await this.prisma.user.findUnique({
+			where: { id: userId }
+		})
+
+		if (user) throw new NotFoundException('User not found')
+
 		return this.prisma.taskList.findUnique({
 			where: { userId, id: taskListId }
 		})
