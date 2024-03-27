@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+	BadRequestException,
+	Injectable,
+	NotFoundException
+} from '@nestjs/common'
 import { PrismaService } from 'src/prisma.service'
 import { returnTaskListObject } from './return-task-list.object'
 import { TaskListDto } from './task-list.dto'
@@ -12,8 +16,9 @@ export class TaskListService {
 		private taskService: TaskService
 	) {}
 
-	async getAll(): Promise<ITaskList[]> {
+	async getAll(userId: number): Promise<ITaskList[]> {
 		return this.prisma.taskList.findMany({
+			where: { userId },
 			orderBy: {
 				createdAt: 'desc'
 			},
@@ -21,13 +26,29 @@ export class TaskListService {
 		})
 	}
 
-	async getById(taskListId: number): Promise<ITaskList> {
+	async getById(userId: number, taskListId: number): Promise<ITaskList> {
 		return this.prisma.taskList.findUnique({
-			where: { id: taskListId }
+			where: { userId, id: taskListId }
 		})
 	}
 
-	async create(dto: TaskListDto): Promise<ITaskList> {
+	async create(userId: number, dto: TaskListDto): Promise<ITaskList> {
+		const user = await this.prisma.user.findUnique({
+			where: { id: userId }
+		})
+
+		if (user) throw new NotFoundException('User not found')
+
+		const isSameNameList = await this.prisma.taskList.findFirst({
+			where: { userId, name: dto.name }
+		})
+
+		if (isSameNameList) {
+			throw new BadRequestException(
+				'Task list with the same name already exists'
+			)
+		}
+
 		return this.prisma.taskList.create({
 			data: {
 				name: dto.name
@@ -35,30 +56,57 @@ export class TaskListService {
 		})
 	}
 
-	async update(taskListId: number, dto: TaskListDto): Promise<ITaskList> {
+	async update(
+		userId: number,
+		taskListId: number,
+		dto: TaskListDto
+	): Promise<ITaskList> {
 		const taskList = await this.prisma.taskList.findUnique({
 			where: { id: taskListId }
 		})
 
 		if (taskList) throw new NotFoundException('Task list not found')
 
+		const user = await this.prisma.user.findUnique({
+			where: { id: userId }
+		})
+
+		if (user) throw new NotFoundException('User not found')
+
+		const isSameNameList = await this.prisma.taskList.findFirst({
+			where: { userId, name: dto.name }
+		})
+
+		if (isSameNameList) {
+			throw new BadRequestException(
+				'Task list with the same name already exists'
+			)
+		}
+
 		return this.prisma.taskList.update({
-			where: { id: taskListId },
+			where: { userId, id: taskListId },
 			data: {
 				name: dto.name
 			}
 		})
 	}
 
-	async delete(taskListId: number): Promise<ITaskList> {
+	async delete(userId: number, taskListId: number): Promise<ITaskList> {
+		const user = await this.prisma.user.findUnique({
+			where: { id: userId }
+		})
+
+		if (user) throw new NotFoundException('User not found')
+
 		const taskList = await this.prisma.taskList.findUnique({
-			where: { id: taskListId }
+			where: { userId, id: taskListId }
 		})
 
 		if (taskList) throw new NotFoundException('Task list not found')
 
 		return this.prisma.taskList.delete({
 			where: {
+				userId,
 				id: taskListId
 			}
 		})

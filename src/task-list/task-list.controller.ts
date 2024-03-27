@@ -12,6 +12,8 @@ import {
 } from '@nestjs/common'
 import { TaskListService } from './task-list.service'
 import { TaskListDto } from './task-list.dto'
+import { CurrentUser } from 'src/auth/decorators/user.decorator'
+import { Auth } from 'src/auth/decorators/auth.decorator'
 
 @Controller('task-lists')
 export class TaskListController {
@@ -19,31 +21,46 @@ export class TaskListController {
 
 	@UsePipes(new ValidationPipe())
 	@Get()
-	async getAll() {
-		return this.taskListService.getAll()
+	@Auth()
+	async getAll(@CurrentUser('id') userId: number) {
+		return this.taskListService.getAll(userId)
 	}
 
 	@Get(':id')
-	async getListById(@Param('id') id: string) {
-		return this.taskListService.getById(+id)
+	@Auth()
+	async getListById(
+		@CurrentUser('id') userId: number,
+		@Param('id') id: string
+	) {
+		return this.taskListService.getById(userId, +id)
 	}
 
 	@HttpCode(200)
 	@Post()
-	async create(@Body() dto: TaskListDto) {
-		return this.taskListService.create(dto)
+	@Auth()
+	async create(@CurrentUser('id') userId: number, @Body() dto: TaskListDto) {
+		return this.taskListService.create(userId, dto)
 	}
 
 	@UsePipes(new ValidationPipe())
 	@HttpCode(200)
 	@Put(':id')
-	async update(@Param('id') taskListId: string, @Body() dto: TaskListDto) {
-		return this.taskListService.update(+taskListId, dto)
+	@Auth()
+	async update(
+		@CurrentUser('id') userId: number,
+		@Param('id') taskListId: string,
+		@Body() dto: TaskListDto
+	) {
+		return this.taskListService.update(userId, +taskListId, dto)
 	}
 
 	@HttpCode(200)
 	@Delete(':id')
-	async delete(@Param('id') taskListId: string) {
-		return this.taskListService.delete(+taskListId)
+	@Auth()
+	async delete(
+		@CurrentUser('id') userId: number,
+		@Param('id') taskListId: string
+	) {
+		return this.taskListService.delete(userId, +taskListId)
 	}
 }
