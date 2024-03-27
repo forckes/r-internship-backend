@@ -6,7 +6,7 @@ import {
 	HttpCode,
 	Param,
 	Post,
-	Put,
+	Patch,
 	UsePipes,
 	ValidationPipe
 } from '@nestjs/common'
@@ -45,7 +45,7 @@ export class TaskController {
 
 	@UsePipes(new ValidationPipe())
 	@HttpCode(200)
-	@Put(':id')
+	@Patch(':id')
 	@Auth()
 	async update(
 		@CurrentUser('id') userId: number,
