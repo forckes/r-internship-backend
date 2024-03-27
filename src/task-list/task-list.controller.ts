@@ -65,7 +65,7 @@ export class TaskListController {
 	}
 
 	@HttpCode(200)
-	@Delete(':id')
+	@Delete('admin-delete/:id')
 	@Auth('admin')
 	async adminDelete(
 		@CurrentUser('id') userId: number,
