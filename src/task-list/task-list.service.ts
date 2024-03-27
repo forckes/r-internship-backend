@@ -20,9 +20,9 @@ export class TaskListService {
 		})
 	}
 
-	async getById(taskId: number) {
+	async getById(taskListId: number) {
 		return this.prisma.taskList.findUnique({
-			where: { id: taskId }
+			where: { id: taskListId }
 		})
 	}
 

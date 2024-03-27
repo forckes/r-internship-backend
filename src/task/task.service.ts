@@ -53,7 +53,11 @@ export class TaskService {
 				name,
 				description,
 				dueDate,
-				taskListId,
+				taskList: {
+					connect: {
+						id: taskListId
+					}
+				},
 				priority,
 				status
 			}
