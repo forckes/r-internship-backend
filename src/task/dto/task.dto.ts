@@ -1,7 +1,7 @@
-import { EnumTaskAction, EnumTaskStatus, Prisma } from '@prisma/client'
+import { EnumTaskPriority, EnumTaskStatus, Prisma } from '@prisma/client'
 import { IsEnum, IsNumber, IsString } from 'class-validator'
 
-export class TaskListDto implements Prisma.TaskListUpdateInput {
+export class TaskDto implements Prisma.TaskListUpdateInput {
 	@IsString()
 	name: string
 
@@ -11,15 +11,12 @@ export class TaskListDto implements Prisma.TaskListUpdateInput {
 	@IsString()
 	dueDate: string
 
-	@IsEnum(EnumTaskAction)
-	priority: EnumTaskAction
+	@IsEnum(EnumTaskPriority)
+	priority: EnumTaskPriority
 
 	@IsEnum(EnumTaskStatus)
 	status: EnumTaskStatus
 
 	@IsNumber()
 	taskListId: number
-
-	@IsNumber()
-	userId: number
 }
