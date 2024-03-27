@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma.service'
 import { returnTaskListObject } from './return-task-list.object'
 import { TaskListDto } from './task-list.dto'
 import { TaskService } from 'src/task/task.service'
+import { ITaskList } from './task-list.interface'
 
 @Injectable()
 export class TaskListService {
@@ -11,7 +12,7 @@ export class TaskListService {
 		private taskService: TaskService
 	) {}
 
-	async getAll() {
+	async getAll(): Promise<ITaskList[]> {
 		return this.prisma.taskList.findMany({
 			orderBy: {
 				createdAt: 'desc'
@@ -20,13 +21,13 @@ export class TaskListService {
 		})
 	}
 
-	async getById(taskListId: number) {
+	async getById(taskListId: number): Promise<ITaskList> {
 		return this.prisma.taskList.findUnique({
 			where: { id: taskListId }
 		})
 	}
 
-	async create(dto: TaskListDto) {
+	async create(dto: TaskListDto): Promise<ITaskList> {
 		return this.prisma.taskList.create({
 			data: {
 				name: dto.name
@@ -34,7 +35,7 @@ export class TaskListService {
 		})
 	}
 
-	async update(taskListId: number, dto: TaskListDto) {
+	async update(taskListId: number, dto: TaskListDto): Promise<ITaskList> {
 		const taskList = await this.prisma.taskList.findUnique({
 			where: { id: taskListId }
 		})
@@ -49,7 +50,7 @@ export class TaskListService {
 		})
 	}
 
-	async delete(taskListId: number) {
+	async delete(taskListId: number): Promise<ITaskList> {
 		const taskList = await this.prisma.taskList.findUnique({
 			where: { id: taskListId }
 		})
