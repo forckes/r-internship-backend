@@ -37,13 +37,13 @@ export class TaskListController {
 	@UsePipes(new ValidationPipe())
 	@HttpCode(200)
 	@Put(':id')
-	async update(@Param('id') categoryId: string, @Body() dto: TaskListDto) {
-		return this.taskListService.update(+categoryId, dto)
+	async update(@Param('id') taskListId: string, @Body() dto: TaskListDto) {
+		return this.taskListService.update(+taskListId, dto)
 	}
 
 	@HttpCode(200)
 	@Delete(':id')
-	async delete(@Param('id') categoryId: string) {
-		return this.taskListService.delete(+categoryId)
+	async delete(@Param('id') taskListId: string) {
+		return this.taskListService.delete(+taskListId)
 	}
 }
