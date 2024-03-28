@@ -95,5 +95,5 @@ enum EnumTaskStatus {
 enum EnumTaskPriority {
   LOW
   MEDIUM
-  HIGHT
+  HIGH
 }
