@@ -91,7 +91,13 @@ export class TaskService {
 		if (!user) throw new NotFoundException('User not found')
 
 		const isSameName = await this.prisma.task.findFirst({
-			where: { userId, name: dto.name }
+			where: {
+				AND: [
+					{ userId },
+					{ name: dto.name },
+					{ NOT: { id: { equals: taskId } } }
+				]
+			}
 		})
 
 		if (isSameName) {
@@ -114,7 +120,7 @@ export class TaskService {
 				dueDate,
 				taskList: {
 					connect: {
-						id: taskListId
+						id: taskListId ?? task.taskListId
 					}
 				},
 				priority,
