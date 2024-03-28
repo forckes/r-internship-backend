@@ -61,7 +61,7 @@ export class TaskService {
 		return this.prisma.task.create({
 			data: {
 				name,
-				description,
+				description: description || '',
 				dueDate,
 				taskList: {
 					connect: {
