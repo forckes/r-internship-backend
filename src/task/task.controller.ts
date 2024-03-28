@@ -36,6 +36,18 @@ export class TaskController {
 		return this.taskService.getById(userId, +id)
 	}
 
+	@UsePipes(new ValidationPipe())
+	@HttpCode(200)
+	@Patch(':id')
+	@Auth()
+	async moveToAnotherList(
+		@CurrentUser('id') userId: number,
+		@Param('id') taskId: string,
+		@Body() data: { newTaskListId: number }
+	) {
+		return this.taskService.moveTask(userId, +taskId, data)
+	}
+
 	@HttpCode(200)
 	@Auth()
 	@Post()

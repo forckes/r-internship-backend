@@ -41,6 +41,35 @@ export class TaskService {
 		})
 	}
 
+	async moveTask(
+		userId: number,
+		taskId: number,
+		data: { newTaskListId: number }
+	): Promise<ITask> {
+		const task = await this.prisma.task.findUnique({
+			where: { userId, id: taskId }
+		})
+
+		if (!task) throw new NotFoundException('Task not found')
+
+		if (task.taskListId === data.newTaskListId)
+			throw new BadRequestException(
+				`Task ${JSON.stringify(task.taskListId)} is already in this list  ${JSON.stringify(data.newTaskListId)}`
+			)
+		// const previousListId = task.taskListId
+
+		return this.prisma.task.update({
+			where: { id: taskId },
+			data: {
+				taskList: {
+					connect: {
+						id: data.newTaskListId
+					}
+				}
+			}
+		})
+	}
+
 	async create(userId: number, dto: TaskDto): Promise<ITask> {
 		const user = await this.prisma.user.findUnique({
 			where: { id: userId }
