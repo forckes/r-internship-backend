@@ -28,7 +28,13 @@ export class TaskListService {
 			orderBy: {
 				createdAt: 'desc'
 			},
-			select: returnTaskListObject
+
+			select: {
+				...returnTaskListObject,
+				_count: {
+					select: { tasks: true }
+				}
+			}
 		})
 	}
 
@@ -40,7 +46,13 @@ export class TaskListService {
 		if (!user) throw new NotFoundException('User not found')
 
 		return this.prisma.taskList.findUnique({
-			where: { userId, id: taskListId }
+			where: { userId, id: taskListId },
+			select: {
+				...returnTaskListObject,
+				_count: {
+					select: { tasks: true }
+				}
+			}
 		})
 	}
 
