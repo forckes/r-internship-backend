@@ -7,4 +7,5 @@ export interface ITask {
 	taskListId: number
 	priority: EnumTaskPriority
 	status: EnumTaskStatus
+	userId: number
 }
